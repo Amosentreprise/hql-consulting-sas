@@ -33,9 +33,7 @@ export default function Users() {
     <div>
       <div className="eyebrow">Accès</div>
       <h1 className="mt-3 font-display text-4xl font-bold tracking-[-.05em]">Utilisateurs</h1>
-      <p className="mt-4 max-w-2xl text-sm leading-7 opacity-70">1) Créez le compte dans Firebase Console → Authentication → Users. 2) La personne se connecte sur /admin/login : son identifiant (UID) s'affiche. 3) Collez-le ici avec son rôle. <strong>Administrateur</strong> : tout, y compris les accès. <strong>Éditeur</strong> : contenus et messages.</p>
-
-      <form onSubmit={add} className="mt-8 grid gap-4 bg-white p-6 sm:grid-cols-[1.4fr_1fr_.7fr_auto] sm:items-end">
+       <form onSubmit={add} className="mt-8 grid gap-4 bg-white p-6 sm:grid-cols-[1.4fr_1fr_.7fr_auto] sm:items-end">
         <label className="grid gap-2 text-[10px] font-bold uppercase tracking-[.14em]">UID<input required className="form-input" value={uid} onChange={(e) => setUid(e.target.value)} /></label>
         <label className="grid gap-2 text-[10px] font-bold uppercase tracking-[.14em]">Email (repère)<input className="form-input" value={email} onChange={(e) => setEmail(e.target.value)} /></label>
         <label className="grid gap-2 text-[10px] font-bold uppercase tracking-[.14em]">Rôle<select className="form-input" value={newRole} onChange={(e) => setNewRole(e.target.value as StaffRole)}><option value="editor">Éditeur</option><option value="admin">Administrateur</option></select></label>

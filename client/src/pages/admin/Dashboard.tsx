@@ -57,8 +57,8 @@ export default function Dashboard() {
       <section className="mt-12 bg-white p-6 shadow-[0_10px_30px_rgba(23,57,209,.06)]">
         <h2 className="font-display text-2xl font-bold tracking-[-.04em]">État de la configuration</h2>
         <div className="mt-4 grid gap-2">
-          <Status ok={isFirebaseConfigured} label="Firebase (base de données + connexion)" />
-          <Status ok={isCloudinaryConfigured} label="Cloudinary (images)" />
+          <Status ok={isFirebaseConfigured} label="base de données + connexion" />
+          <Status ok={isCloudinaryConfigured} label="images" />
         </div>
       </section>
 
