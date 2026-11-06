@@ -1,0 +1,17 @@
+{
+  "name": "HQL Consulting",
+  "short_name": "HQL",
+  "description": "HQL Consulting — Conseil, audit, comptabilité, fiscalité, financement et formation professionnelle.",
+  "lang": "fr",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F6F3EC",
+  "theme_color": "#1739D1",
+  "icons": [
+    {
+      "src": "/images/hql-official-logo_81614e28.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

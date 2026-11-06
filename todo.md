@@ -1,0 +1,37 @@
+# Suivi — PDF de présentation client HQL
+
+
+- [x] Copier et téléverser le logo officiel dans les assets persistants du projet.
+- [x] Remplacer le monogramme provisoire dans l’en-tête et le pied de page.
+- [x] Ajuster la taille et le contraste du logo sur desktop et mobile.
+- [x] Définir les teintes principales du jaune, du bleu royal et du violet.
+- [x] Remplacer la palette bleu nuit / vert signal dans les sections, boutons et accents.
+- [x] Vérifier les contrastes et la responsivité après harmonisation.
+- [x] Sauvegarder et livrer la version harmonisée.
+- [x] Définir les messages et visuels des slides hero.
+- [x] Construire le carrousel avec navigation, progression et CTA contextuels.
+- [x] Vérifier les interactions desktop/mobile et l’accessibilité.
+- [x] Sauvegarder et livrer la nouvelle version.
+- [x] Définir un langage de waves, découpes et compositions par section.
+- [x] Recomposer les sections Cabinet, Expertises, Différence, Formations et Ressources.
+- [x] Ajouter les transitions et vérifier la responsivité.
+- [x] Sauvegarder et livrer la nouvelle direction.
+- [x] Structurer la page À propos et la section Chiffres clés post-hero.
+- [x] Construire la page À propos avec navigation dédiée.
+- [x] Relier le bouton Catalogue à une section de formations visible.
+- [x] Créer un footer créatif et vérifier toute la navigation.
+- [x] Sauvegarder et livrer la nouvelle version.
+- [x] Relier le bouton « En savoir plus » à /a-propos.
+- [x] Ajouter la section équipe avec emplacements pour portraits réels.
+- [x] Créer les pages détaillées des services et des formations.
+- [x] Vérifier les parcours et livrer la nouvelle version.
+- [x] Créer la page Ressources dédiée.
+- [x] Relier « Toutes les ressources » à /ressources.
+- [x] Vérifier la route et livrer la correction.
+- [x] Ajouter la section « Ils nous font confiance » avec slider de logos réels à fournir.
+- [x] Ajouter Contact dans la navbar et créer la page /contact.
+- [x] Créer la page /realisations avec études de cas.
+- [x] Vérifier les parcours et livrer la nouvelle version.
+- [x] Préparer les vues principales de la maquette pour export.
+- [x] Générer le PDF de présentation client.
+- [x] Vérifier le PDF et le livrer.
