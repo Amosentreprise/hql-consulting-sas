@@ -122,11 +122,7 @@ const trainings: Seed<"trainings">[] = [
   },
 ];
 
-const projects: Seed<"projects">[] = [
-  { id: "project-01", slug: "pme-pilotage", order: 1, published: true, tone: "blue", sector: "PME · Pilotage", title: "Rendre la performance lisible pour décider plus vite.", text: "Étude de cas à compléter avec une mission réelle : contexte, démarche HQL, livrables et résultats vérifiables.", tags: ["Diagnostic", "Tableau de bord"] },
-  { id: "project-02", slug: "organisation-impact", order: 2, published: true, tone: "purple", sector: "Organisation · Impact", title: "Transformer une ambition d’impact en trajectoire finançable.", text: "Étude de cas à compléter avec un projet réel : ambition, structuration financière, indicateurs et partenaires.", tags: ["Finance verte", "Structuration"] },
-  { id: "project-03", slug: "institution-securisation", order: 3, published: true, tone: "yellow", sector: "Institution · Sécurisation", title: "Faire de la rigueur un avantage opérationnel.", text: "Étude de cas à compléter avec une mission réelle : risques identifiés, recommandations et plan de mise en œuvre.", tags: ["Audit", "Contrôle interne"] },
-];
+const projects: Seed<"projects">[] = [];
 
 const resources: Seed<"resources">[] = [
   { id: "resource-01", slug: "5-questions-financer-sa-croissance", order: 1, published: true, category: "Conseil", readTime: "06 min", accent: "blue", title: "Les 5 questions à se poser avant de financer sa croissance.", excerpt: "Un cadre simple pour passer de l’envie de grandir à une trajectoire financière crédible.", content: "" },

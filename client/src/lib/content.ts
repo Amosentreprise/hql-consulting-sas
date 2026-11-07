@@ -162,7 +162,13 @@ export async function getSeededFlags() {
 
 /* ---------- Messages (formulaires de contact) ---------- */
 
-export async function submitMessage(input: { name: string; email: string; subject?: string; message: string; source: string }) {
+export async function submitMessage(input: { name: string; email: string; subject?: string; message: string; source: string; startedAt?: number }) {
+  // Anti-robot : formulaire rempli en moins de 3 s = faux succès silencieux ; 1 envoi par minute et par navigateur.
+  if (input.startedAt && Date.now() - input.startedAt < 3000) return;
+  try {
+    const last = Number(localStorage.getItem("hql:lastMessage") || 0);
+    if (Date.now() - last < 60_000) throw new Error("Merci de patienter une minute avant un nouvel envoi.");
+  } catch (e) { if ((e as Error).message.startsWith("Merci")) throw e; }
   if (!db) throw new Error("Le formulaire n'est pas disponible pour le moment. Écrivez-nous à contact@hqlconsulting.net.");
   await addDoc(collection(db, "messages"), {
     name: input.name.trim().slice(0, 120),
@@ -173,6 +179,7 @@ export async function submitMessage(input: { name: string; email: string; subjec
     status: "new",
     createdAt: serverTimestamp(),
   });
+  try { localStorage.setItem("hql:lastMessage", String(Date.now())); } catch { /* ignore */ }
 }
 
 export function useMessages() {

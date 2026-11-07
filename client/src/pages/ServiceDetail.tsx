@@ -3,6 +3,7 @@ import { ArrowUpRight, Check, MoveRight } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
+import SEO from "@/components/SEO";
 import NotFound from "@/pages/NotFound";
 import { useItem } from "@/lib/content";
 
@@ -25,6 +26,7 @@ export default function ServiceDetail() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#F6F3EC] text-[#1739D1]">
+      <SEO title={`${service.title} — HQL Consulting`} description={service.intro} />
       <SiteNav />
 
       <main>

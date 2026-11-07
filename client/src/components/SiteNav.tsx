@@ -162,7 +162,7 @@ export default function SiteNav({ overlay = false }: SiteNavProps) {
               <ArrowUpRight size={17} />
             </Link>
             <p className="mobile-navigation-caption">
-              Conseil · Audit · Finance verte · Formation
+              Conseil · Audit · Comptabilité · Formation
             </p>
           </div>
         </aside>

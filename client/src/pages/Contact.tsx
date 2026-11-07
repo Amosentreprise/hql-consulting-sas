@@ -1,7 +1,9 @@
 import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
-import { useState } from "react";
+import { Link } from "wouter";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { submitMessage } from "@/lib/content";
+import { submitMessage, useCollection } from "@/lib/content";
+import { COMPANY_EMAIL, COMPANY_PHONES } from "@/lib/site";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -14,7 +16,7 @@ const contactDetails = [
   {
     icon: Phone,
     label: "Téléphone",
-    content: <>01 96 38 88 35<br />01 52 67 96 96</>,
+    content: <>{COMPANY_PHONES.map((ph, i) => <span key={ph.href}>{i > 0 && <br />}<a href={ph.href} className="transition hover:text-[#6B118E]">{ph.label.replace("+229 ", "")}</a></span>)}</>,
   },
   {
     icon: Mail,
@@ -25,6 +27,8 @@ const contactDetails = [
 
 export default function Contact() {
   const [sending, setSending] = useState(false);
+  const startedAt = useRef(Date.now());
+  const { items: services } = useCollection("services");
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -39,6 +43,7 @@ export default function Contact() {
         subject: subject.startsWith("Choisir") ? "Non précisé" : subject,
         message: String(data.get("message") || ""),
         source: "page-contact",
+        startedAt: startedAt.current,
       });
       form.reset();
       toast.success("Merci, votre message a bien été envoyé. Nous vous répondrons rapidement.");
@@ -123,12 +128,9 @@ export default function Contact() {
                     Votre besoin
                     <select name="subject" className="form-input">
                       <option>Choisir un domaine</option>
-                      <option>Études et conseil</option>
-                      <option>Audit et contrôle</option>
-                      <option>Comptabilité et fiscalité</option>
-                      <option>Financement et finance verte</option>
-                      <option>Formation professionnelle</option>
-                    </select>
+                      {services.map((sv) => <option key={sv.id}>{sv.title}</option>)}
+                      <option>Autre demande</option>
+                      </select>
                   </label>
 
                   <label className="grid gap-2 text-[10px] font-bold uppercase tracking-[.14em]">
@@ -137,7 +139,7 @@ export default function Contact() {
                   </label>
 
                   <div className="flex flex-col justify-between gap-5 border-t border-[#1739D1]/15 pt-6 sm:flex-row sm:items-center">
-                    <p className="max-w-xs text-xs leading-5 text-[#1739D1]/45">Vos informations sont utilisées uniquement pour répondre à votre demande.</p>
+                    <p className="max-w-xs text-xs leading-5 text-[#1739D1]/55">En envoyant ce formulaire, vous acceptez que vos informations soient utilisées uniquement pour répondre à votre demande. <Link href="/confidentialite" className="underline underline-offset-2">Politique de confidentialité</Link></p>
                     <button disabled={sending} className="flex w-fit items-center gap-3 bg-[#FFD21A] px-5 py-4 text-xs font-bold uppercase tracking-[.13em] text-[#1739D1] transition hover:bg-[#6B118E] hover:text-white disabled:opacity-60" type="submit">
                       {sending ? "Envoi…" : "Envoyer ma demande"}
                       <ArrowUpRight size={16} />

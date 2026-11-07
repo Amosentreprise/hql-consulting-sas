@@ -9,4 +9,6 @@
   <url><loc>https://hqlconsulting.net/ressources</loc><priority>0.7</priority></url>
   <url><loc>https://hqlconsulting.net/realisations</loc><priority>0.7</priority></url>
   <url><loc>https://hqlconsulting.net/contact</loc><priority>0.7</priority></url>
+  <url><loc>https://hqlconsulting.net/mentions-legales</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://hqlconsulting.net/confidentialite</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
 </urlset>

@@ -1,3 +1,4 @@
+import { COMPANY_NAME, DEVELOPER_NAME, DEVELOPER_URL, SOCIALS } from "@/lib/site";
 import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "wouter";
 
@@ -106,9 +107,9 @@ export default function SiteFooter() {
         </div>
 
         <div className="mt-16 flex flex-col justify-between gap-4 border-t border-white/15 pt-6 text-[10px] uppercase tracking-[.14em] text-white/40 sm:flex-row">
-          <span>© HQL Consulting</span>
-          <Link href="/admin/login" className="transition hover:text-white">Espace équipe</Link>
-          <span className="text-[#FFD21A]">Built for better decisions.</span>
+          <span>© {new Date().getFullYear()} {COMPANY_NAME}. Tous droits réservés.</span>
+          <span className="flex flex-wrap gap-x-5 gap-y-2">{Object.entries(SOCIALS).filter(([, url]) => url).map(([name, url]) => <a key={name} href={url} target="_blank" rel="noreferrer noopener" className="capitalize transition hover:text-white">{name}</a>)}<Link href="/mentions-legales" className="transition hover:text-white">Mentions légales</Link><Link href="/confidentialite" className="transition hover:text-white">Politique de confidentialité</Link><Link href="/admin/login" className="transition hover:text-white">Espace équipe</Link></span>
+          {DEVELOPER_NAME && <span className="text-[#FFD21A]">Développé par {DEVELOPER_URL ? <a href={DEVELOPER_URL} target="_blank" rel="noreferrer noopener" className="underline underline-offset-4">{DEVELOPER_NAME}</a> : DEVELOPER_NAME}</span>}
         </div>
       </div>
     </footer>

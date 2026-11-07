@@ -1,5 +1,6 @@
 /* Firebase — initialisation unique (Firestore pour les contenus, Auth chargé uniquement dans l'admin). */
 import { getApps, initializeApp, type FirebaseApp } from "firebase/app";
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import { getFirestore, type Firestore } from "firebase/firestore";
 
 const config = {
@@ -16,5 +17,14 @@ export const isFirebaseConfigured = Boolean(config.apiKey && config.projectId &&
 export const app: FirebaseApp | null = isFirebaseConfigured
   ? (getApps()[0] ?? initializeApp(config))
   : null;
+
+/* App Check (anti-robot) : actif seulement si VITE_RECAPTCHA_SITE_KEY est renseignée. */
+const recaptchaKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined;
+if (app && recaptchaKey) {
+  if (import.meta.env.DEV) (self as unknown as { FIREBASE_APPCHECK_DEBUG_TOKEN: boolean }).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+  try {
+    initializeAppCheck(app, { provider: new ReCaptchaV3Provider(recaptchaKey), isTokenAutoRefreshEnabled: true });
+  } catch { /* déjà initialisé (rechargement à chaud) */ }
+}
 
 export const db: Firestore | null = app ? getFirestore(app) : null;

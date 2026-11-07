@@ -1,7 +1,8 @@
+import { COMPANY_NAME, DEVELOPER_NAME, DEVELOPER_URL } from "@/lib/site";
 /* HQL Consulting — page d’accueil institutionnelle premium
    Contenu aligné sur la présentation officielle du cabinet.
 */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -109,8 +110,10 @@ function TrustSlider() {
       () => setActiveTrust((current) => (current + 1) % trustSlides.length),
       5000,
     );
-    return () => window.clearInterval(timer);
+  return () => window.clearInterval(timer);
   }, []);
+
+  if (partners.length === 0) return null;
 
   return (
     <section className="relative overflow-hidden bg-white py-20 lg:py-24">
@@ -118,7 +121,7 @@ function TrustSlider() {
       <div className="relative mx-auto max-w-[1440px] px-5 lg:px-12">
         <div className="grid gap-10 lg:grid-cols-[.7fr_1.3fr] lg:items-center">
           <div>
-            <div className="eyebrow text-[#6B118E]">08 / Références et relations</div>
+            <div className="eyebrow text-[#6B118E]">07 / Références et relations</div>
             <h2 className="mt-6 max-w-md font-display text-4xl font-bold leading-[.96] tracking-[-.06em] sm:text-6xl">
               Des relations bâties sur la <span className="font-serif font-normal italic text-[#6B118E]">confiance.</span>
             </h2>
@@ -182,6 +185,8 @@ function TrustSlider() {
 }
 
 function AppointmentModal({ onClose }: { onClose: () => void }) {
+  const { items: modalServices } = useCollection("services");
+  const startedAt = useRef(Date.now());
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#10175C]/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="appointment-title">
       <div className="relative w-full max-w-xl bg-[#F6F3EC] p-7 shadow-2xl sm:p-10">
@@ -200,7 +205,7 @@ function AppointmentModal({ onClose }: { onClose: () => void }) {
           if (data.get("website")) return;
           try {
             const subject = String(data.get("subject") || "");
-            await submitMessage({ name: String(data.get("name")), email: String(data.get("email")), subject: subject.startsWith("Votre besoin") ? "Non précisé" : subject, message: String(data.get("message") || "(sans message)"), source: "modal-accueil" });
+            await submitMessage({ name: String(data.get("name")), email: String(data.get("email")), subject: subject.startsWith("Votre besoin") ? "Non précisé" : subject, message: String(data.get("message") || "(sans message)"), source: "modal-accueil", startedAt: startedAt.current });
             toast.success("Votre demande a bien été enregistrée.");
             onClose();
           } catch (error) { toast.error((error as Error).message || "Envoi impossible pour le moment."); }
@@ -212,12 +217,11 @@ function AppointmentModal({ onClose }: { onClose: () => void }) {
           </div>
           <select name="subject" className="form-input">
             <option>Votre besoin</option>
-            <option>Études et conseil</option>
-            <option>Audit et contrôle</option>
-            <option>Comptabilité et fiscalité</option>
-            <option>Formation professionnelle</option>
+            {modalServices.map((sv) => <option key={sv.id}>{sv.title}</option>)}
+            <option>Autre demande</option>
           </select>
           <textarea name="message" className="form-input min-h-28 resize-none" placeholder="En quelques mots, votre besoin..." />
+          <p className="text-[11px] leading-5 text-[#1739D1]/55">En envoyant ce formulaire, vous acceptez que vos informations soient utilisées uniquement pour répondre à votre demande. <Link href="/confidentialite" onClick={onClose} className="underline">Politique de confidentialité</Link></p>
           <button className="mt-2 flex items-center justify-center gap-3 bg-[#1739D1] px-5 py-4 text-sm font-bold text-white transition hover:bg-[#1228A0]" type="submit">
             Envoyer ma demande <MoveRight size={17} />
           </button>
@@ -230,7 +234,12 @@ function AppointmentModal({ onClose }: { onClose: () => void }) {
 export default function Home() {
   const { items: services } = useCollection("services");
   const { items: trainings } = useCollection("trainings");
-  const { items: resources } = useCollection("resources");
+  const { items: allResources } = useCollection("resources");
+  const resources = allResources.filter((r) => r.content?.trim());
+  const { items: partnersList } = useCollection("partners");
+  const hasRefs = partnersList.length > 0;
+  const resNo = String(7 + (hasRefs ? 1 : 0)).padStart(2, "0");
+  const callNo = String(7 + (hasRefs ? 1 : 0) + (resources.length > 0 ? 1 : 0)).padStart(2, "0");
   const [modalOpen, setModalOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -325,12 +334,12 @@ export default function Home() {
 
         <TrustSlider />
         <Wave color="#F6F3EC" />
-        <section id="ressources" className="border-t border-[#1739D1]/10 bg-[#F6F3EC] py-20 lg:py-28"><div className="mx-auto max-w-[1440px] px-5 lg:px-12"><div className="flex flex-col justify-between gap-8 md:flex-row md:items-end"><div><div className="eyebrow">07 / Ressources</div><h2 className="mt-6 font-display text-4xl font-bold tracking-[-.06em] sm:text-5xl">Comprendre, décider, <span className="font-serif font-normal italic text-[#6B118E]">agir.</span></h2></div><Link href="/ressources" className="flex w-fit items-center gap-3 border-b-2 border-[#FFD21A] pb-2 text-xs font-bold uppercase tracking-[.12em]">Toutes les ressources <ArrowUpRight size={15} /></Link></div><div className="mt-12 grid gap-6 md:grid-cols-3">{resources.slice(0, 3).map((r) => <Link key={r.id} href={`/ressources/${r.slug}`} className="group block border-t border-[#1739D1]/20 pt-5"><div className="mb-12 text-[10px] font-bold uppercase tracking-[.16em] text-[#6B118E]">{r.category}</div><h3 className="font-display text-2xl font-bold leading-tight tracking-[-.04em]">{r.title}</h3><div className="mt-8 flex items-center gap-2 text-xs font-bold">Lire la ressource <ArrowUpRight size={15} /></div></Link>)}</div></div></section>
+        {resources.length > 0 && <section id="ressources" className="border-t border-[#1739D1]/10 bg-[#F6F3EC] py-20 lg:py-28"><div className="mx-auto max-w-[1440px] px-5 lg:px-12"><div className="flex flex-col justify-between gap-8 md:flex-row md:items-end"><div><div className="eyebrow">{resNo} / Ressources</div><h2 className="mt-6 font-display text-4xl font-bold tracking-[-.06em] sm:text-5xl">Comprendre, décider, <span className="font-serif font-normal italic text-[#6B118E]">agir.</span></h2></div><Link href="/ressources" className="flex w-fit items-center gap-3 border-b-2 border-[#FFD21A] pb-2 text-xs font-bold uppercase tracking-[.12em]">Toutes les ressources <ArrowUpRight size={15} /></Link></div><div className="mt-12 grid gap-6 md:grid-cols-3">{resources.slice(0, 3).map((r) => <Link key={r.id} href={`/ressources/${r.slug}`} className="group block border-t border-[#1739D1]/20 pt-5"><div className="mb-12 text-[10px] font-bold uppercase tracking-[.16em] text-[#6B118E]">{r.category}</div><h3 className="font-display text-2xl font-bold leading-tight tracking-[-.04em]">{r.title}</h3><div className="mt-8 flex items-center gap-2 text-xs font-bold">Lire la ressource <ArrowUpRight size={15} /></div></Link>)}</div></div></section>}
 
-        <section className="bg-[#FFD21A] py-20 lg:py-28"><div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-10 px-5 lg:flex-row lg:items-end lg:px-12"><div><div className="eyebrow text-[#6B118E]">08 / Premier échange</div><h2 className="mt-7 max-w-3xl font-display text-5xl font-bold leading-[.9] tracking-[-.07em] text-[#1739D1] sm:text-7xl">Parlons de votre<br /><span className="font-serif font-normal italic">prochain enjeu.</span></h2></div><button onClick={() => setModalOpen(true)} className="flex w-fit items-center gap-4 bg-[#1739D1] px-6 py-4 text-xs font-bold uppercase tracking-[.12em] text-white transition hover:bg-[#1228A0]">Prendre rendez-vous <ArrowUpRight size={17} /></button></div></section>
+        <section className="bg-[#FFD21A] py-20 lg:py-28"><div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-10 px-5 lg:flex-row lg:items-end lg:px-12"><div><div className="eyebrow text-[#6B118E]">{callNo} / Premier échange</div><h2 className="mt-7 max-w-3xl font-display text-5xl font-bold leading-[.9] tracking-[-.07em] text-[#1739D1] sm:text-7xl">Parlons de votre<br /><span className="font-serif font-normal italic">prochain enjeu.</span></h2></div><button onClick={() => setModalOpen(true)} className="flex w-fit items-center gap-4 bg-[#1739D1] px-6 py-4 text-xs font-bold uppercase tracking-[.12em] text-white transition hover:bg-[#1228A0]">Prendre rendez-vous <ArrowUpRight size={17} /></button></div></section>
       </main>
 
-      <footer className="relative overflow-hidden bg-[#1739D1] py-16 text-white lg:py-20"><div className="pointer-events-none absolute -right-10 -top-24 font-display text-[18rem] font-bold leading-none tracking-[-.15em] text-white/[.05]">HQL</div><div className="relative mx-auto max-w-[1440px] px-5 lg:px-12"><div className="grid gap-12 lg:grid-cols-[1.1fr_.9fr_.9fr] lg:gap-20"><div><Logo /><h2 className="mt-12 max-w-xl font-display text-4xl font-bold leading-[.95] tracking-[-.06em] sm:text-6xl">La prochaine bonne décision commence par une <span className="font-serif font-normal italic text-[#FFD21A]">conversation.</span></h2><button onClick={() => setModalOpen(true)} className="mt-8 flex items-center gap-3 bg-[#FFD21A] px-5 py-4 text-xs font-bold uppercase tracking-[.12em] text-[#1739D1] transition hover:bg-white">Parlons de votre projet <ArrowUpRight size={16} /></button></div><div className="lg:pt-16"><div className="mb-5 text-[10px] font-bold uppercase tracking-[.18em] text-[#FFD21A]">Nous trouver</div><p className="text-sm leading-7 text-white/70">C/193-194 Scoa Gbeto<br />Steinmetz — Immeuble Octogone<br />04 BP 0823 Cadjehoun — Bénin<br /><br />contact@hqlconsulting.net<br />01 96 38 88 35 · 01 52 67 96 96</p></div><div className="lg:pt-16"><div className="mb-5 text-[10px] font-bold uppercase tracking-[.18em] text-[#FFD21A]">Explorer</div><div className="grid gap-3 text-sm text-white/70"><Link href="/a-propos" className="transition hover:text-white">Le cabinet</Link><button className="text-left transition hover:text-white" onClick={() => scrollTo("expertises")}>Nos métiers</button><button className="text-left transition hover:text-white" onClick={() => scrollTo("catalogue")}>Formations</button><Link href="/ressources" className="transition hover:text-white">Ressources</Link><Link href="/realisations" className="transition hover:text-white">Réalisations</Link><Link href="/contact" className="transition hover:text-white">Contact</Link></div></div></div><div className="mt-16 flex flex-col justify-between gap-4 border-t border-white/15 pt-6 text-[10px] uppercase tracking-[.14em] text-white/40 sm:flex-row"><span>© HQL Consulting · <Link href="/admin/login" className="hover:text-white">Espace équipe</Link></span><span>Mentions légales · Politique de confidentialité</span><span className="text-[#FFD21A]">Built for better decisions.</span></div></div></footer>
+      <footer className="relative overflow-hidden bg-[#1739D1] py-16 text-white lg:py-20"><div className="pointer-events-none absolute -right-10 -top-24 font-display text-[18rem] font-bold leading-none tracking-[-.15em] text-white/[.05]">HQL</div><div className="relative mx-auto max-w-[1440px] px-5 lg:px-12"><div className="grid gap-12 lg:grid-cols-[1.1fr_.9fr_.9fr] lg:gap-20"><div><Logo /><h2 className="mt-12 max-w-xl font-display text-4xl font-bold leading-[.95] tracking-[-.06em] sm:text-6xl">La prochaine bonne décision commence par une <span className="font-serif font-normal italic text-[#FFD21A]">conversation.</span></h2><button onClick={() => setModalOpen(true)} className="mt-8 flex items-center gap-3 bg-[#FFD21A] px-5 py-4 text-xs font-bold uppercase tracking-[.12em] text-[#1739D1] transition hover:bg-white">Parlons de votre projet <ArrowUpRight size={16} /></button></div><div className="lg:pt-16"><div className="mb-5 text-[10px] font-bold uppercase tracking-[.18em] text-[#FFD21A]">Nous trouver</div><p className="text-sm leading-7 text-white/70">C/193-194 Scoa Gbeto<br />Steinmetz — Immeuble Octogone<br />04 BP 0823 Cadjehoun — Bénin<br /><br />contact@hqlconsulting.net<br />01 96 38 88 35 · 01 52 67 96 96</p></div><div className="lg:pt-16"><div className="mb-5 text-[10px] font-bold uppercase tracking-[.18em] text-[#FFD21A]">Explorer</div><div className="grid gap-3 text-sm text-white/70"><Link href="/a-propos" className="transition hover:text-white">Le cabinet</Link><button className="text-left transition hover:text-white" onClick={() => scrollTo("expertises")}>Nos métiers</button><button className="text-left transition hover:text-white" onClick={() => scrollTo("catalogue")}>Formations</button><Link href="/ressources" className="transition hover:text-white">Ressources</Link><Link href="/realisations" className="transition hover:text-white">Réalisations</Link><Link href="/contact" className="transition hover:text-white">Contact</Link></div></div></div><div className="mt-16 flex flex-col justify-between gap-4 border-t border-white/15 pt-6 text-[10px] uppercase tracking-[.14em] text-white/40 sm:flex-row"><span>© {new Date().getFullYear()} {COMPANY_NAME}. Tous droits réservés.</span><span className="flex flex-wrap gap-x-5 gap-y-2"><Link href="/mentions-legales" className="hover:text-white">Mentions légales</Link><Link href="/confidentialite" className="hover:text-white">Politique de confidentialité</Link></span><Link href="/admin/login" className="hover:text-white">Espace équipe</Link>{DEVELOPER_NAME && <span className="text-[#FFD21A]">Développé par {DEVELOPER_URL ? <a href={DEVELOPER_URL} target="_blank" rel="noreferrer noopener" className="underline underline-offset-4">{DEVELOPER_NAME}</a> : DEVELOPER_NAME}</span>}</div></div></footer>
     </div>
   );
 }
