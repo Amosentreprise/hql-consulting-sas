@@ -64,7 +64,7 @@ export default function Dashboard() {
 
       <section className="mt-6 bg-white p-6 shadow-[0_10px_30px_rgba(23,57,209,.06)]">
         <h2 className="font-display text-2xl font-bold tracking-[-.04em]">Importer le contenu actuel du site</h2>
-        <p className="mt-2 max-w-2xl text-sm opacity-70">Tant qu'une section n'a pas été importée ou alimentée, le site affiche son contenu d'origine. Importez-le une fois pour pouvoir le modifier ici. Aucun élément existant n'est écrasé.</p>
+        <p className="mt-2 max-w-2xl text-sm opacity-70">Tant qu'une section n'a pas été importée ou alimentée, le site affiche son contenu d'origine. Importez-le une fois pour pouvoir le modifier ici.</p>
         <div className="mt-5 flex flex-wrap gap-3">
           {collectionOrder.filter((n) => n !== "partners").map((n) => (
             <button key={n} disabled={busy !== null} onClick={() => seed(n)} className="flex items-center gap-2 border border-[#1739D1]/25 px-4 py-2.5 text-[11px] font-bold uppercase tracking-[.12em] disabled:opacity-50">
