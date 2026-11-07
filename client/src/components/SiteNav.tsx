@@ -41,7 +41,7 @@ export default function SiteNav({ overlay = false }: SiteNavProps) {
           : "relative bg-[#1739D1]"
       }`}
     >
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-4 lg:px-12 lg:py-5">
+      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-2 px-5 xl:gap-6 py-4 lg:px-12 lg:py-5">
         <Link
           href="/"
           onClick={closeMenu}
@@ -56,7 +56,7 @@ export default function SiteNav({ overlay = false }: SiteNavProps) {
         </Link>
 
         <nav
-          className="hidden items-center gap-8 text-[11px] font-bold uppercase tracking-[0.16em] lg:flex"
+          className="hidden items-center gap-5 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.16em] min-[1360px]:gap-8 lg:flex"
           aria-label="Navigation principale"
         >
           <button type="button" onClick={() => goToSection("expertises")} className="nav-link">
@@ -79,8 +79,8 @@ export default function SiteNav({ overlay = false }: SiteNavProps) {
           </Link>
         </nav>
 
-        <div className="hidden items-center gap-5 lg:flex">
-          <a href="tel:+2290196388835" className="flex items-center gap-2 text-[11px] font-bold">
+        <div className="hidden items-center gap-5 whitespace-nowrap lg:flex">
+          <a href="tel:+2290196388835" className="hidden items-center gap-2 text-[11px] font-bold min-[1360px]:flex">
             <Phone size={14} className="text-[#FFD21A]" />
             +229 01 96 38 88 35
           </a>
